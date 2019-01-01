@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import java.util.Random;
+import java.util.ArrayList;
 
 import java.net.URLDecoder;
 
@@ -86,29 +87,33 @@ public class DatabaseHandler{
         }
     }
     
-    public void getToiletsInRange(double latMin, double latMax, double lngMin, double lngMax){
-        String sql = "SELECT (title, lat, lng, description, rating, price, currency) FROM " 
+    public ArrayList<String[]> getToiletsInRange(double latMin, double latMax, double lngMin, double lngMax){
+        ArrayList<String[]> toilets = new ArrayList<>(); 
+        
+        String sql = "SELECT title, lat, lng, description, rating, price, currency FROM " 
                         + TABLE_NAME 
-                        + " WHERE lat<" + latMin 
+                        + " WHERE lat>" + latMin 
                         + " AND lat<" + latMax
-                        + " AND lng<" + lngMin 
+                        + " AND lng>" + lngMin 
                         + " AND lng<" + lngMax;
                         
         try(Connection conn = connect();
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
-                
-                while(rs.next()){
-                    String toilet = "";
-                    for(int i = 1; i <= 7; i++){
-                        toilet = toilet + rs.getString(i) + " ";
-                    }
-                    System.out.println(toilet);
+
+            while(rs.next()){
+                String[] toilet = new String[7];    //7 parameters
+                for(int i = 1; i <= 7; i++){
+                    toilet[i-1] = rs.getString(i);
                 }
+                toilets.add(toilet);
+            }
                 
         }catch(SQLException e){
                 System.out.println(e.getMessage());
         }
+        
+        return toilets;
     }
     
     private Connection connect() {
