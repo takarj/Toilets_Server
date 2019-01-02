@@ -30,6 +30,8 @@ public class Server{
 
         public void run(){
             try{
+                System.out.println("new client:" + socket.getInetAddress());
+                
                 InputStream inputToServer = socket.getInputStream();
                 OutputStream outputFromServer = socket.getOutputStream();
                 
@@ -57,11 +59,13 @@ public class Server{
                                 Double.parseDouble(params[1]), Double.parseDouble(params[2]), 
                                 Double.parseDouble(params[3]), Double.parseDouble(params[4]));
                             for(String[] t : toilets){
+                                serverPrintOut.print("toilet");
                                 for(int i = 0; i < t.length; i++){
                                     serverPrintOut.print("?val%" +  t[i]);
                                 }
                                 serverPrintOut.println();
                             }
+                            serverPrintOut.println("done");
                         }catch(Exception e){
                             serverPrintOut.println("bad request");
                         }
