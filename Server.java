@@ -30,7 +30,9 @@ public class Server{
 
         public void run(){
             try{
-                System.out.println("new client:" + socket.getInetAddress());
+                String client;
+                client = socket.getInetAddress().toString();
+                System.out.println("new client:" + client);
                 
                 InputStream inputToServer = socket.getInputStream();
                 OutputStream outputFromServer = socket.getOutputStream();
@@ -50,8 +52,9 @@ public class Server{
                         socket.close();
                     }
                     
-                    if(line.startsWith("getToilets")){     // getToilets?val%latMin?val%latMax?val%lngMin?val%lngMax
+                    if(line.startsWith("getToilets")){     // getToilets?val%latTop?val%latBot?val%lngLeft?val%lngRight
                         //serverPrintOut.println("Searching Toilets");
+                        System.out.println("Client: " + client + " issued request: " + line);
                         try{
                             String[] params = line.split("\\?val\\%");
                             //System.out.println(params[1]);
@@ -72,6 +75,7 @@ public class Server{
                     }
                     
                     if(line.startsWith("submit")){      //submit?val%title?val%lat?val%lng?val%description?val%rating?val%price?val%currency
+                        System.out.println("Client: " + client + " issued request: " + line);
                         try{
                             String[] params = line.split("\\?val\\%");
                             
