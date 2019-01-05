@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class Server{
     
-    private static final int PORT = 9991;
+    private static int PORT = 9991;
     
     public static void main(String[] args){
         Server s = new Server();
