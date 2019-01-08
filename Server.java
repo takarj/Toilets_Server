@@ -79,9 +79,10 @@ public class Server{
                         try{
                             String[] params = line.split("\\?val\\%");
                             
-                            dbHandler.insert(params[1], Double.parseDouble(params[2]), Double.parseDouble(params[2]), params[3], Float.parseFloat(params[4]), Float.parseFloat(params[5]), params[6]);
+                            dbHandler.insert(params[1], Double.parseDouble(params[2]), Double.parseDouble(params[3]), params[4], Float.parseFloat(params[5]), Float.parseFloat(params[6]), params[7]);
                         }catch(Exception e){
                             serverPrintOut.println("bad request");
+                            System.out.println("bad submit request: " + e);
                         }
                     }
                     
@@ -101,6 +102,7 @@ public class Server{
         try{
             final ExecutorService service = Executors.newCachedThreadPool();
             ServerSocket serversock = new ServerSocket(PORT);
+            System.out.println("Server started");
             while(true){
                 Socket socket = serversock.accept();
                 service.submit(new Handler(socket));

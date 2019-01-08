@@ -35,8 +35,8 @@ public class DatabaseHandler{
         try (Connection conn = connect();) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("The driver name is " + meta.getDriverName());
-                System.out.println("A new database has been created.");
+                //System.out.println("The driver name is " + meta.getDriverName());
+                //System.out.println("A new database has been created.");
             }
  
         } catch (SQLException e) {
@@ -82,25 +82,36 @@ public class DatabaseHandler{
             pstmt.setFloat(7, price);
             pstmt.setString(8, currency);
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
     
-    public ArrayList<String[]> getToiletsInRange(double latMin, double latMax, double lngMin, double lngMax){
+    public ArrayList<String[]> getToiletsInRange(double latBot, double latTop, double lngLeft, double lngRight){
         ArrayList<String[]> toilets = new ArrayList<>(); 
-        
-        String sql = "SELECT title, lat, lng, description, rating, price, currency FROM " 
-                        + TABLE_NAME 
-                        + " WHERE lat>" + latMin 
-                        + " AND lat<" + latMax
-                        + " AND lng>" + lngMin 
-                        + " AND lng<" + lngMax;
                         
-        try(Connection conn = connect();
+        try{
+            Connection conn = connect();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql)){
-
+            String sql;
+            if(lngLeft <= lngRight){
+                sql = "SELECT title, lat, lng, description, rating, price, currency FROM " 
+                            + TABLE_NAME 
+                            + " WHERE lat>" + latBot 
+                            + " AND lat<" + latTop
+                            + " AND lng>" + lngLeft 
+                            + " AND lng<" + lngRight;
+            }else{
+                sql = "SELECT title, lat, lng, description, rating, price, currency FROM " 
+                            + TABLE_NAME 
+                            + " WHERE lat>" + latBot 
+                            + " AND lat<" + latTop
+                            + " AND NOT(lng>" + lngRight 
+                            + " AND lng<" + lngLeft
+                            + ")";
+            }
+            ResultSet rs = stmt.executeQuery(sql);
+            
             while(rs.next()){
                 String[] toilet = new String[7];    //7 parameters
                 for(int i = 1; i <= 7; i++){
